@@ -22,7 +22,7 @@ return new class extends Migration
             $table->foreign('coach_id')->references('id')->on('coaches');
             $table->string('name');
             $table->text('body');
-            $table->float('price');            
+            $table->decimal('price');            
         });
     }
 
