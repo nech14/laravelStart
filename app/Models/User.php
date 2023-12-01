@@ -30,12 +30,8 @@ class User extends Model
         'ban' => 'boolean'
     ];
 
-    public function purchased_courses(){
-        return $this->morphMany(Purchased_course::class, 'purchased_course_id');
+    public function comments(){
+        return $this->morphMany(Comment::class, 'commentable');
     }
 
-    public function scopeGetName($query, $userId)
-    {
-        return $query->with('Users')->find($userId);
-    }
 }
