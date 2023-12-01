@@ -11,18 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('comments', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
 
-            $table->string('name');            
-            $table->string('lastname');
-            $table->string('email')->unique();
-            $table->integer('age');
-            $table->boolean('ban')->default(false);
+            $table->foreignId('user_id')->constrained()->on('users')->onDelete('cascade');
+            $table->morphs('commentable');
 
-            $table->string('password');
-            $table->rememberToken();
+            $table->float('rating');
+            $table->text('comment');
 
             $table->softDeletes();
         });
@@ -33,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('comments');
     }
 };
