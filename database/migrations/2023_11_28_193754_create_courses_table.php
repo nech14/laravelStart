@@ -19,10 +19,13 @@ return new class extends Migration
             $table->timestamp('publiched_at')->nullable();
 
             $table->bigInteger('coach_id')->unsigned();
-            $table->foreign('coach_id')->references('id')->on('coaches');
+            $table->foreign('coach_id')->references('id')->on('coaches')->onDelete('cascade');
+
             $table->string('name');
             $table->text('body');
-            $table->decimal('price');            
+            $table->decimal('price');   
+            
+            $table->softDeletes();
         });
     }
 

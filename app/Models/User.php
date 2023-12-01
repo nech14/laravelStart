@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
-use App\Http\Middleware\Authenticate;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class User extends Authenticate
+class User extends Model
 {
     use HasFactory, Notifiable;
+    use SoftDeletes;
 
     protected $fillable = [
 
@@ -29,4 +30,12 @@ class User extends Authenticate
         'ban' => 'boolean'
     ];
 
+    public function purchased_courses(){
+        return $this->morphMany(Purchased_course::class, 'purchased_course_id');
+    }
+
+    public function scopeGetName($query, $userId)
+    {
+        return $query->with('Users')->find($userId);
+    }
 }

@@ -15,11 +15,14 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
 
-            $table->foreignId('user_id')->constrained();
-            $table->foreignId('course_id')->constrained();
+            $table->foreignId('user_id')->constrained()->on('users')->onDelete('cascade');
+
+            $table->morphs('commentable');
 
             $table->float('rating');
             $table->text('comment');
+
+            $table->softDeletes();
         });
     }
 
