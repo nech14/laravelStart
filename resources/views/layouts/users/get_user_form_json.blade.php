@@ -7,21 +7,21 @@
         <title>Registration form</title>
 
         <link rel="stylesheet" href="{{ asset('css/header.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/footer.css') }}">        
+        <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
         <link rel="stylesheet" href="{{ asset('css/main.css') }}">
-        
+
     </head>
     <body>
 
         @include('includes.header')
 
         <main>
-            <h1>Публикация</h1>
-            <form action="{{ route('post.get') }}" method="post">
+            <h1>Пользователь</h1>
+            <form action="{{ route('user.get_json') }}" method="post">
                 @csrf       
 
-                <label for="post_id">post_id:</label>
-                <input type="number" id="post_id" name="post_id">
+                <label for="id">user_id:</label>
+                <input type="number" id="id" name="id">
 
                 <input type="submit" value="Найти">
             </form>

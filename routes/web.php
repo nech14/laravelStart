@@ -48,17 +48,36 @@ Route::get('/get_user_form', function(){
     return view('layouts/users/get_user_form');
 }) -> name('get_user_form');
 
+Route::get('/get_user_form_json', function(){
+    return view('layouts/users/get_user_form_json');
+}) -> name('get_user_form.json');
+
+
 Route::get('/get_position_form', function(){
     return view('layouts/positions/get_position_form');
 }) -> name('get_position_form');
+
+Route::get('/get_position_form_json', function(){
+    return view('layouts/positions/get_position_form_json');
+}) -> name('get_position_form.json');
+
 
 Route::get('/get_post_form', function(){
     return view('layouts/posts/get_post_form');
 }) -> name('get_post_form');
 
+Route::get('/get_post_form_json', function(){
+    return view('layouts/posts/get_post_form_json');
+}) -> name('get_post_form.json');
+
+
 Route::get('/get_comment_form', function(){
     return view('layouts/comments/get_comment_form');
 }) -> name('get_comment_form');
+
+Route::get('/get_comment_form_json', function(){
+    return view('layouts/comments/get_comment_form_json');
+}) -> name('get_comment_form.json');
 
 
 Route::get('user/create', [UserController::class, 'create']) -> name('user.create');
@@ -111,12 +130,16 @@ Route::get('comment/{id}/delete', [CommentController::class, 'delete']) -> name(
 
 Route::get('json/user/{id}', [UserController::class, 'json_id']) -> name('user.json.id');
 Route::get('json/users', [UserController::class, 'jsons']) -> name('users.json');
+Route::post('json/user/get_json', [UserController::class, 'get_json']) -> name('user.get_json');
 
 Route::get('json/position/{id}', [PositionController::class, 'json_id']) -> name('position.json.id');
 Route::get('json/positions', [PositionController::class, 'jsons']) -> name('positions.json');
+Route::post('json/position/get_json', [PositionController::class, 'get_json']) -> name('position.get_json');
 
 Route::get('json/post/{id}', [PostController::class, 'json_id']) -> name('post.json.id');
-Route::get('json/posts', [PostController::class, 'jsons']) -> name('posts.jsons');
+Route::get('json/posts', [PostController::class, 'jsons']) -> name('posts.json');
+Route::post('json/post/get_json', [PostController::class, 'get_json']) -> name('post.get_json');
 
 Route::get('json/comment/{id}', [CommentController::class, 'json_id']) -> name('comment.json.id');
-Route::get('json/comments', [CommentController::class, 'jsons']) -> name('comments.jsons');
+Route::get('json/comments', [CommentController::class, 'jsons']) -> name('comments.json');
+Route::post('json/comment/get_json', [CommentController::class, 'get_json']) -> name('comment.get_json');

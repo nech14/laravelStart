@@ -184,4 +184,9 @@ class UserController extends Controller
 
         return UserResource::collection($users);
     }
+
+    public function get_json(Request $request){        
+        $request->id;
+        return redirect()->route('user.json.id', ['id' => $request->input('id')]);
+    }
 }

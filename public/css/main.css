@@ -1,0 +1,50 @@
+body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    width: 100%;
+    min-height: 100vh;
+}
+form{
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0 30px 0;
+}
+main{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+h1{
+    font-size: 2.5vw;
+}
+h2{
+    font-size: 2vw;
+}
+.item_a{                
+    text-decoration: none;
+    color: black;
+    padding-bottom: 18px; 
+    font-size: 1.9vw;
+}
+.item_a:hover{
+    color: blue;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;    
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+th{
+    padding: 0 6px 0 6px;
+}
+td{
+    padding: 6px;
+}
+

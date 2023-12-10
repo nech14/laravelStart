@@ -163,4 +163,10 @@ class PostController extends Controller
 
         return PostResource::collection($posts);
     }
+
+    public function get_json(Request $request){        
+        $request->id;
+        return redirect()->route('post.json.id', ['id' => $request->input('id')]);
+    }
+
 }

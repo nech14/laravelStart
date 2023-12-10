@@ -16,12 +16,12 @@
         @include('includes.header')
 
         <main>
-            <h1>Публикация</h1>
-            <form action="{{ route('post.get') }}" method="post">
+            <h1>Пост</h1>
+            <form action="{{ route('post.get_json') }}" method="post">
                 @csrf       
 
-                <label for="post_id">post_id:</label>
-                <input type="number" id="post_id" name="post_id">
+                <label for="id">post_id:</label>
+                <input type="number" id="id" name="id">
 
                 <input type="submit" value="Найти">
             </form>

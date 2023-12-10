@@ -87,4 +87,5 @@ class RegistrationController extends Controller
     public function delete($record){
         return "удалить запись №{$record}";
     }
+
 }

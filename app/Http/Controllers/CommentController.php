@@ -78,7 +78,7 @@ class CommentController extends Controller
 
         foreach ($comments as $comment) {
             $table .= '<tr>';
-            $table .= '<td>' . $comment->id .'</td>';
+            $table .= '<td>' . '<a class="item_a" href="comment/'. $comment->id .'">' . $comment->id . '</a>' .'</td>';
             $table .= '<td>' . '<a class="item_a" href="user/'. $comment->user_id .'">' . $comment->user_id . '</a>' . '</td>';
             $b = $comment->approved == 0 ? "false" : "true";
             $table .= '<td>' . $b . '</td>';
@@ -184,5 +184,10 @@ class CommentController extends Controller
         }
 
         return CommentResource::collection($comments);
+    }
+
+    public function get_json(Request $request){        
+        $request->id;
+        return redirect()->route('comment.json.id', ['id' => $request->input('id')]);
     }
 }

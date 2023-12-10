@@ -8,42 +8,8 @@
 
         <link rel="stylesheet" href="{{ asset('css/header.css') }}">
         <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
-        <style type="text/css">
-            body{
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                margin: 0;
-                width: 100%;
-                min-height: 100vh;
-            }
-            form{
-                display: flex;
-                flex-direction: column;
-                padding: 10px 0 30px 0;
-            }
-            main{
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                flex: 1;
-            }
-            h1{
-                font-size: 2.5vw;
-            }
-            h2{
-                font-size: 2vw;
-            }
-            .item_a{                
-                text-decoration: none;
-                color: black;
-                padding-bottom: 18px; 
-                font-size: 1.9vw;
-            }
-            .item_a:hover{
-                color: blue;
-            }
-        </style>
+        <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+
     </head>
     <body>
 
@@ -63,6 +29,12 @@
                 <li>
                     <a class="item_a" href="{{ route('get_user_form') }}">Вывести пользователя по id</a>
                 </li>
+                <li>
+                    <a class="item_a" href="{{ route('get_user_form.json') }}">Вывести пользователя по id в json</a>
+                </li>
+                <li>
+                    <a class="item_a" href="{{ route('users.json') }}">Вывести пользователей в json</a>
+                </li>
             </lu>
 
             <h2>Сотрудники:</h2>
@@ -75,6 +47,12 @@
                 </li>
                 <li>
                     <a class="item_a" href="{{ route('get_position_form') }}">Вывести сотрудника по id</a>
+                </li>
+                <li>
+                    <a class="item_a" href="{{ route('get_position_form.json') }}">Вывести сотрудника по id в json</a>
+                </li>
+                <li>
+                    <a class="item_a" href="{{ route('positions.json') }}">Вывести сотрудников в json</a>
                 </li>
             </lu>
 
@@ -89,6 +67,12 @@
                 <li>
                     <a class="item_a" href="{{ route('get_post_form') }}">Вывести публикацию по id</a>
                 </li>
+                <li>
+                    <a class="item_a" href="{{ route('get_post_form.json') }}">Вывести публикацию по id в json</a>
+                </li>
+                <li>
+                    <a class="item_a" href="{{ route('posts.json') }}">Вывести посты в json</a>
+                </li>
             </lu>
 
             <h2>Комментарии:</h2>
@@ -101,6 +85,12 @@
                 </li>
                 <li>
                     <a class="item_a" href="{{ route('get_comment_form') }}">Вывести комментарий по id</a>
+                </li>
+                <li>
+                    <a class="item_a" href="{{ route('get_comment_form.json') }}">Вывести комментарий по id в json</a>
+                </li>
+                <li>
+                    <a class="item_a" href="{{ route('comments.json') }}">Вывести комментарии в json</a>
                 </li>
             </lu>
             

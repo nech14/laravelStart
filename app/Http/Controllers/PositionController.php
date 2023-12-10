@@ -62,7 +62,7 @@ class PositionController extends Controller
 
         foreach ($positions as $position) {
             $table .= '<tr>';
-            $table .= '<td>' . '<a class="item_a" href="user/'. $position->user_id .'">' . $position->user_id . '</a>' . '</td>';
+            $table .= '<td>' . '<a class="item_a" href="position/'. $position->user_id .'">' . $position->user_id . '</a>' . '</td>';
             $table .= '<td>' . $position->working_position . '</td>';
             $table .= '<td>' . $position->city . '</td>';
             $table .= '<td>' . $position->organization . '</td>';
@@ -171,5 +171,10 @@ class PositionController extends Controller
         }
 
         return PositionResource::collection($positions);
+    }
+
+    public function get_json(Request $request){        
+        $request->id;
+        return redirect()->route('position.json.id', ['id' => $request->input('id')]);
     }
 }
