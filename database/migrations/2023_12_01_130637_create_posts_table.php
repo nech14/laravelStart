@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
 
-            $table->boolean('publiched')->default(true);
+            $table->boolean('publiched')->default(false);
             $table->timestamp('publiched_at')->nullable();
 
             $table->foreignId('user_id')->constrained()->on('users')->onDelete('cascade');

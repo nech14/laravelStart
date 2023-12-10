@@ -35,7 +35,7 @@ class Post extends Model
         return $this->morphMany(Comment::class, 'commentable');
     }
 
-    public function scopeWithUser($query, $userId){
-        return $query->where('user_id', $userId)->with('user')->get();
+    public function scopeWithUser($query, $user_id){
+        return $query->where('user_id', $user_id)->with('user')->get();
     }
 }

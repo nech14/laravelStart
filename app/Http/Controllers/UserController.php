@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Http\Resources\User\UserResource;
 use App\Models\User;
-use App\Models\Coach;
-use App\Models\Purchased_course;
+use App\Models\Position;
+use App\Models\Comment;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,36 +13,85 @@ use Illuminate\Support\Carbon;
 
 class UserController extends Controller
 {
-    public function index(){
-        $users = User::all();
-        return view('users.users', compact('users'));
+
+    public function get_table($users){
+        $table = '<table>';
+        $table .= '<tr>
+                        <th>id</th>
+                        <th>Имя</th>
+                        <th>Фамилия</th>
+                        <th>Email</th>
+                        <th>Возраст</th>
+                        <th>Заблокирован</th>
+                    </tr>';
+
+        foreach ($users as $user) {
+            $table .= '<tr>';
+            $table .= '<td>' . '<a class="item_a" href=" '. $user->id .'">' . $user->id . '</a>' . '</td>';
+            $table .= '<td>' . $user->name . '</td>';
+            $table .= '<td>' . $user->lastname . '</td>';
+            $table .= '<td>' . $user->email . '</td>';
+            $table .= '<td>' . $user->age . '</td>';
+            $b = $user->ban == 0 ? "false" : "true";
+            $table .= '<td>' . $b . '</td>';
+            $table .= '</tr>';
+        }
+
+        $table .= '</table>';
+        return $table;
     }
 
-    public function show($id){
-        $user = User::getName($id);
-        $purchased_courses = Purchased_course::where('commentable_type', 'App\Models\User')
-        ->where('commentable_id', $id)
-        ->get();
-        return view('users.user', compact('user', 'purchased_courses'));
+    public function index(){
+        $users = User::all();
+
+        $table =  $this->get_table($users);
+
+        return view('/layouts/users/users', ['table' => $table]); //compact('users')
+    }
+
+
+    public function get_user_by_id(Request $request){
+        $request->id;
+        return redirect()->route('user.id', ['id' => $request->input('user_id')]);
+    }
+
+    public function get_user($id){
+        $user = User::query()->find($id);
+        
+        if (empty($user)){
+            $user = "Пользователя с id = $id нет";
+            
+            return view('/layouts/users/users',['table' => $user]);
+        }
+
+        //$table =  $this->get_table([$user]);
+        $json = (json_encode($user, JSON_PRETTY_PRINT));
+
+        //return view('/layouts/users/users', ['users' => $user]);
+        return view('/layouts/users/user',['json' => $json]);
     }
 
     public function edit($id){
-        $user = User::getName($id);
-        return view('users.edit', compact('user'));
+        $user = User::query()->find($id);
+        
+        return view('/layouts/users/user_edit', ['user' => $user]);
     }
 
-    public function update_user($id, Request $request){
-        $user = User::getName($id);
+    public function update($id, Request $request){
+        $user = User::query()->find($id);
         $request->validate([
             'name' => 'required|min:2',
-            'lastname' => 'required',
-            'age' => 'required|numeric|min:12|max:99',
-            'city' => 'required',
+            'lastname' => 'required|min:2',
+            'password' => 'required|min:8',
+            'age' => 'required|numeric|min:16|max:150',
             'email' => 'required|email'
         ], [
             'name.required' => 'Необходимо ввести имя!',
             'name.min' => 'В имени должно быть минимум :min символа.',
             'lastname.required' => 'Необходимо ввести фамилию!',
+            'lastname.min' => 'В фамилии должно быть минимум :min символа.',
+            'password.requred' => 'Необходимо ввсети пароль!',
+            'password.min' => 'Пароль должен состоять минимум из :min символов.',
             'age.required' => 'Необходимо ввести возраст!',
             'age.min' => 'Не обслуживаем клиентов младше :min лет.',
             'age.max' => 'Не обслуживаем клиентов старше :max лет.',
@@ -49,45 +99,50 @@ class UserController extends Controller
             'email.required' => 'Необходимо ввести email!',
             'email.email' => 'Это не похоже на email.'
         ]);
+        
         DB::transaction(function () use ($user, $request) {
             $user->update([
                 'name' => $request->input('name'),
                 'lastname' => $request->input('lastname'),
+                'password' => $request->input('password'),
                 'age' => $request->input('age'),
-                'city' => $request->input('city'),
                 'email' => $request->input('email'),
             ]);
         });
 
-        return redirect('/users/'.$id);
+        return view('layouts/index', ['result' => 'Пользователь обновлён!']);
     }
 
     public function delete($id){
         $user = User::find($id);
-        $user->posts()->delete();
+        //$user->posts()->delete();
         $user->delete();
-        return redirect('users');
+        return redirect()->route('users.index');
     }
 
     public function create(){
-        $roles = Role::all();
-        return view('users.create', compact('roles'));
+        return view('layouts/users/user_reg');
     }
 
     public function store(Request $request){
         
         $request->validate([
-            'first_name' => 'required|min:2',
-            'last_name' => 'required',
-            'patronymic' => 'required',
-            'password' => 'required|min:2',
+            'name' => 'required|min:2',
+            'lastname' => 'required|min:2',
+            'password' => 'required|min:8',
+            'age' => 'required|numeric|min:16|max:150',
             'email' => 'required|email'
         ], [
-            'first_name.required' => 'Необходимо ввести имя!',
-            'first_name.min' => 'В имени должно быть минимум :min символа.',
-            'last_name.required' => 'Необходимо ввести фамилию!',
-            'password.required' => 'Необходимо ввести пароль!',
-            'patronymic.required' => 'Необходимо ввести возраст!',
+            'name.required' => 'Необходимо ввести имя!',
+            'name.min' => 'В имени должно быть минимум :min символа.',
+            'lastname.required' => 'Необходимо ввести фамилию!',
+            'lastname.min' => 'В фамилии должно быть минимум :min символа.',
+            'password.requred' => 'Необходимо ввсети пароль!',
+            'password.min' => 'Пароль должен состоять минимум из :min символов.',
+            'age.required' => 'Необходимо ввести возраст!',
+            'age.min' => 'Не обслуживаем клиентов младше :min лет.',
+            'age.max' => 'Не обслуживаем клиентов старше :max лет.',
+            'age.numeric' => 'Возраст должен быть числом!', 
             'email.required' => 'Необходимо ввести email!',
             'email.email' => 'Это не похоже на email.'
         ]);
@@ -95,10 +150,10 @@ class UserController extends Controller
         $now = Carbon::now();
 
         $user = new User([
-            'first_name' => $request->input('first_name'),
-            'last_name' => $request->input('last_name'),
-            'patronymic' => $request->input('patronymic'),
+            'name' => $request->input('name'),
+            'lastname' => $request->input('lastname'),
             'password' => $request->input('password'),
+            'age' => $request->input('age'),
             'email' => $request->input('email'),
             'created_at' => $now,
             'updated_at' => $now,
@@ -106,6 +161,27 @@ class UserController extends Controller
 
         $user->save();        
 
-        return redirect('users');
+        return view('layouts/index', ['result' => 'Пользователь добавлен!']);
+    }
+
+
+    public function json_id($id){
+        $user = User::query()->find($id);
+        
+        if (empty($user)){
+            return ["data" => -1];
+        }
+
+        return new UserResource($user);
+    }
+
+    public function jsons(){
+        $users = User::all();
+        
+        if (empty($users)){
+            return ["data" => -1];
+        }
+
+        return UserResource::collection($users);
     }
 }

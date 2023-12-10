@@ -25,7 +25,11 @@ class Position extends Model
 
     ];
 
-    public function users(){
-        return $this->belongsToMany(User::class, 'position', 'working_position', 'user_id');
+    public function user(){
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function scopeWithUser($query, $user_id){
+        return $query->where('user_id', $user_id)->with('user')->get();
     }
 }

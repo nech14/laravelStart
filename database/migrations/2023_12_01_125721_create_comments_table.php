@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
 
+            $table->boolean('approved')->default(false);
+
             $table->foreignId('user_id')->constrained()->on('users')->onDelete('cascade');
             $table->morphs('commentable');
 

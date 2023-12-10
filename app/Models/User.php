@@ -14,9 +14,9 @@ class User extends Model
 
     protected $fillable = [
 
-        'first_name', 'last_name',          
-        'patronymic', 'email',
-        'ban',        'password'
+        'name', 'lastname',
+        'email', 'age',
+        'ban', 'password'
         
     ];
 
@@ -27,11 +27,22 @@ class User extends Model
     // ];
 
     protected $cast = [
+        'age' => 'integer',
         'ban' => 'boolean'
     ];
+
+    public function post(){
+        return $this->hasMany(Post::class, 'user_id');
+    }
+
+    public function position(){
+        return $this->hasOne(Position::class, 'user_id');
+    }
 
     public function comments(){
         return $this->morphMany(Comment::class, 'commentable');
     }
+
+
 
 }
