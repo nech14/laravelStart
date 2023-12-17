@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\Comment\CommentResource;
 use App\Models\Post;
+use App\Models\User;
 use App\Models\Comment;
 
 use Illuminate\Http\Request;
@@ -39,7 +40,7 @@ class CommentController extends Controller
         if ($request->input('commentable_type') == 'user'){
             $comment = new Comment([
                 'user_id' => $request->input('user_id'),
-                'commentable_type' => 'App\Models\User',
+                'commentable_type' => get_class(new User),
                 'commentable_id' => $request->input('commentable_id'),
                 'rating' => $request->input('rating'),
                 'comment' => $request->input('comment'),
@@ -49,7 +50,7 @@ class CommentController extends Controller
         } else if($request->input('commentable_type') == 'post'){
             $comment = new Comment([
                 'user_id' => $request->input('user_id'),
-                'commentable_type' => 'App\Models\Post',
+                'commentable_type' => get_class(new Post),
                 'commentable_id' => $request->input('commentable_id'),
                 'rating' => $request->input('rating'),
                 'comment' => $request->input('comment'),
@@ -95,10 +96,8 @@ class CommentController extends Controller
 
     public function index(){
         $comments = Comment::all();
-
-        $table =  $this->get_table($comments);
-
-        return view('/layouts/comments/comments', ['table' => $table]); //compact('comments')
+        
+        return view('/layouts/comments/comments', compact('comments'));
     }
 
     public function get_comment_by_id(Request $request){
@@ -107,12 +106,12 @@ class CommentController extends Controller
     }
 
     public function get_comment($id){
-        $comment = Comment::query()->find($id);
+        $comment = Comment::withUserPost($id);
 
-        if (empty($comment)){
+        if (blank($comment)){
             $comment = "Комментария с id = $id нет";
             
-            return view('/layouts/comments/comments',['table' => $comment]);
+            return view('/layouts/result',['result' => $comment]);
         }
 
 

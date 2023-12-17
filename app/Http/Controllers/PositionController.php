@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\Position\PositionResource;
 use App\Models\Position;
+use App\Models\User;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -50,52 +51,22 @@ class PositionController extends Controller
         return view('layouts/index', ['result' => 'Должность к работнику добавлена!']);
     }
 
-    
-    public function get_table($positions){
-        $table = '<table>';
-        $table .= '<tr>
-                        <th>user_id</th>
-                        <th>Должность</th>
-                        <th>Город</th>
-                        <th>Название организации</th>
-                    </tr>';
-
-        foreach ($positions as $position) {
-            $table .= '<tr>';
-            $table .= '<td>' . '<a class="item_a" href="position/'. $position->user_id .'">' . $position->user_id . '</a>' . '</td>';
-            $table .= '<td>' . $position->working_position . '</td>';
-            $table .= '<td>' . $position->city . '</td>';
-            $table .= '<td>' . $position->organization . '</td>';
-            $table .= '</tr>';
-        }
-
-        $table .= '</table>';
-        return $table;
-    }
-
 
     public function index(){
         $positions = Position::all();
 
-        $table =  $this->get_table($positions);
-
-        return view('/layouts/positions/positions', ['table' => $table]);
+        return view('/layouts/positions/positions', compact('positions'));
     }
 
 
     public function get_position($id){
-        $position = Position::where('user_id', $id)->get();
+        $position = Position::withUser($id);
 
-        if (empty($position)){
+        if (blank($position)){
             $position = "Пользователь с id = $id не работник";
             
-            return view('/layouts/positions/positions',['table' => $position]);
+            return view('/layouts/result',['result' => $position]);
         }
-
-        //$table =  $this->get_table([$position]);
-
-        
-        $position = Position::withUser($id);
 
         $json = (json_encode($position, JSON_PRETTY_PRINT));
 
@@ -120,19 +91,33 @@ class PositionController extends Controller
         $position = Position::where('user_id', $id)->first();
 
         $request->validate([
-            'user_id' => 'required|numeric',
             'working_position' => 'required|min:2',
             'city' => 'required|min:2',
-            'organization' => 'required|min:2'
+            'organization' => 'required|min:2',
+            'name' => 'required|min:2',
+            'lastname' => 'required|min:2',
+            'password' => 'required|min:8',
+            'age' => 'required|numeric|min:16|max:150',
+            'email' => 'required|email'
         ], [
-            'user_id.required' => 'Необходимо ввести user_id!',
-            'user_id.numeric' => 'user_id должен быть числом!',
             'working_position.required' => 'Нобходимо ввести должность работника!',
             'working_position.min' => 'В названии должности должно быть минимум :min символа.',
             'city.required' => 'Необходимо ввести название города работнкиа!',
             'city.min' => 'В названии города должно быть минимум :min символа.',
             'organization.requred' => 'Необходимо ввсети название организации работника!',
-            'organization.min' => 'Название организации работника должена состоять минимум из :min символов.'
+            'organization.min' => 'Название организации работника должена состоять минимум из :min символов.',
+            'name.required' => 'Необходимо ввести имя!',
+            'name.min' => 'В имени должно быть минимум :min символа.',
+            'lastname.required' => 'Необходимо ввести фамилию!',
+            'lastname.min' => 'В фамилии должно быть минимум :min символа.',
+            'password.requred' => 'Необходимо ввсети пароль!',
+            'password.min' => 'Пароль должен состоять минимум из :min символов.',
+            'age.required' => 'Необходимо ввести возраст!',
+            'age.min' => 'Не обслуживаем клиентов младше :min лет.',
+            'age.max' => 'Не обслуживаем клиентов старше :max лет.',
+            'age.numeric' => 'Возраст должен быть числом!', 
+            'email.required' => 'Необходимо ввести email!',
+            'email.email' => 'Это не похоже на email.'
         ]);
 
 
@@ -144,6 +129,19 @@ class PositionController extends Controller
                     'organization' => $request->input('organization')
                 ]);
         });
+        
+
+        $user = User::where('id', $position->user_id)->first();
+        DB::transaction(function () use ($user, $request) {
+            $user->update([
+                'name' => $request->input('name'),
+                'lastname' => $request->input('lastname'),
+                'password' => $request->input('password'),
+                'age' => $request->input('age'),
+                'email' => $request->input('email'),
+            ]);
+        });
+
 
         return view('layouts/index', ['result' => 'Работник обновлён!']);
     }

@@ -49,39 +49,10 @@ class PostController extends Controller
         return view('layouts/index', ['result' => 'Публикация добавлена!']);
     }
 
-    public function get_table($posts){
-        $table = '<table>';
-        $table .= '<tr>
-                        <th>id</th>
-                        <th>user_id</th>
-                        <th>Опубликован</th>
-                        <th>Дата публикации</th>
-                        <th>Название</th>
-                        <th>Содержание</th>
-                    </tr>';
-
-        foreach ($posts as $post) {
-            $table .= '<tr>';
-            $table .= '<td>' .  '<a class="item_a" href="post/'. $post->id .'">' . $post->id . '</a>' .'</td>';
-            $table .= '<td>' . '<a class="item_a" href="user/'. $post->user_id .'">' . $post->user_id . '</a>' . '</td>';
-            $b = $post->publiched == 0 ? "false" : "true";
-            $table .= '<td>' . $b . '</td>';
-            $table .= '<td>' . $post->publiched_at . '</td>';
-            $table .= '<td>' . $post->name . '</td>';
-            $table .= '<td>' . $post->text . '</td>';
-            $table .= '</tr>';
-        }
-
-        $table .= '</table>';
-        return $table;
-    }
-
     public function index(){
         $posts = Post::all();
 
-        $table =  $this->get_table($posts);
-
-        return view('/layouts/posts/posts', ['table' => $table]); //compact('posts')
+        return view('/layouts/posts/posts', compact('posts'));
     }
 
     public function get_post_by_id(Request $request){
@@ -90,18 +61,16 @@ class PostController extends Controller
     }
 
     public function get_post($id){
-        $post = Post::query()->find($id);
+        $post = Post::withUser($id);
 
-        if (empty($post)){
-            $post = "Поста с id = $id нет";
+        if (blank($post)){
+            $result = "Поста с id = $id нет";
             
-            return view('/layouts/posts/posts',['table' => $post]);
-        }
+            return view('/layouts/result',['result' => $result]);
+        }        
 
-        //$table =  $this->get_table([$post]);
         $json = (json_encode($post, JSON_PRETTY_PRINT));
 
-        //return view('/layouts/posts/posts', ['posts' => $post]);
         return view('/layouts/posts/post',['json' => $json]);
     }
 

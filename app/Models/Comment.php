@@ -33,4 +33,15 @@ class Comment extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function scopeWithUser($query, $id){
+        return $query->where('id', $id)->with('user')->get();
+    }
+
+    public function scopeWithPost($query, $id){
+        return $query->where('id', $id)->with('user')->get();
+    }
+
+    public function scopeWithUserPost($query, $id){
+        return $query->where('id', $id)->with('user')->with('commentable')->get();
+    }
 }

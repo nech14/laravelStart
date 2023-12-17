@@ -17,14 +17,8 @@
         
         <main>
             <h1>Работник</h1>
-            <form action="{{ route('position.update', ['id' => None]) }}" method="post">
+            <form action="{{ route('position.update', ['id' => $position->user_id]) }}" method="post">
                 @csrf
-
-                <label for="user_id">user_id:</label>
-                <input type="number" id="position_id" name="user_id" value="{!! $position->user_id !!}">
-                @error('user_id')
-                <div style="color:я red; font-size: 14px">{{$message}}</div>
-                @enderror
 
                 <label for="working_position">Должность:</label>
                 <input type="text" id="working_position" name="working_position" value="{!! $position->working_position !!}">
@@ -43,6 +37,37 @@
                 @error('organization')
                 <div style="color: red; font-size: 14px">{{$message}}</div>
                 @enderror
+
+                <label for="name">Имя:</label>
+                <input type="text" id="name" name="name" value="{!! $position->user->name !!}"> 
+                @error('name')
+                <div style="color: red; font-size: 14px">{{$message}}</div>
+                @enderror
+
+                <label for="lastname">Фамилия:</label>
+                <input type="text" id="lastname" name="lastname" value="{{ $position->user->lastname }}">
+                @error('lastname')
+                <div style="color: red; font-size: 14px">{{$message}}</div>
+                @enderror
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value="{{ $position->user->email }}">      
+                @error('email')
+                <div style="color: red; font-size: 14px">{{$message}}</div>
+                @enderror          
+
+                <label for="age">Возраст:</label>
+                <input type="number" id="age" name="age" value="{{ $position->user->age }}">
+                @error('age')
+                <div style="color: red; font-size: 14px">{{$message}}</div>
+                @enderror
+
+                <label for="password">Пароль:</label>
+                <input type="text" id="password" name="password" value="{{ $position->user->password }}">
+                @error('password')
+                <div style="color: red; font-size: 14px">{{$message}}</div>
+                @enderror
+
 
                 <input type="submit" value="Изменить">
             </form>

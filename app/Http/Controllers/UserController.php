@@ -14,39 +14,11 @@ use Illuminate\Support\Carbon;
 class UserController extends Controller
 {
 
-    public function get_table($users){
-        $table = '<table>';
-        $table .= '<tr>
-                        <th>id</th>
-                        <th>Имя</th>
-                        <th>Фамилия</th>
-                        <th>Email</th>
-                        <th>Возраст</th>
-                        <th>Заблокирован</th>
-                    </tr>';
-
-        foreach ($users as $user) {
-            $table .= '<tr>';
-            $table .= '<td>' . '<a class="item_a" href=" '. $user->id .'">' . $user->id . '</a>' . '</td>';
-            $table .= '<td>' . $user->name . '</td>';
-            $table .= '<td>' . $user->lastname . '</td>';
-            $table .= '<td>' . $user->email . '</td>';
-            $table .= '<td>' . $user->age . '</td>';
-            $b = $user->ban == 0 ? "false" : "true";
-            $table .= '<td>' . $b . '</td>';
-            $table .= '</tr>';
-        }
-
-        $table .= '</table>';
-        return $table;
-    }
 
     public function index(){
         $users = User::all();
 
-        $table =  $this->get_table($users);
-
-        return view('/layouts/users/users', ['table' => $table]); //compact('users')
+        return view('/layouts/users/users', compact('users'));
     }
 
 
@@ -61,7 +33,7 @@ class UserController extends Controller
         if (empty($user)){
             $user = "Пользователя с id = $id нет";
             
-            return view('/layouts/users/users',['table' => $user]);
+            return view('/layouts/result',['result' => $user]);
         }
 
         //$table =  $this->get_table([$user]);
