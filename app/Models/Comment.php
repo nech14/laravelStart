@@ -37,8 +37,8 @@ class Comment extends Model
         return $query->where('id', $id)->with('user')->get();
     }
 
-    public function scopeWithPost($query, $id){
-        return $query->where('id', $id)->with('user')->get();
+    public function scopeWithCommentable($query, $id){
+        return $query->where('id', $id)->with('commentable')->get();
     }
 
     public function scopeWithUserPost($query, $id){
