@@ -16,7 +16,7 @@
         @include('includes.header')
 
         <main>
-            <h1>Посты:</h1>
+            <h1>Комментарии:</h1>
             <table>
                 <tr>
                     <th>id</th>

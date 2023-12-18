@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\Post\PostResource;
 use App\Models\Post;
+use App\Models\Comment;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -53,6 +54,23 @@ class PostController extends Controller
         $posts = Post::all();
 
         return view('/layouts/posts/posts', compact('posts'));
+    }
+
+    public function show(){
+        $posts = Post::where('publiched', true)->get();
+        
+        return view('/layouts/blog', compact('posts'));
+    }
+
+    public function show_post($id){
+        $post = Post::find($id); 
+
+        $comments = Comment::where('commentable_type', Post::class)
+            ->where('commentable_id', $id)
+            ->where('approved', true)
+            ->get();
+        
+        return view('/layouts/blog_post', compact('post', 'comments'));
     }
 
     public function get_post_by_id(Request $request){
@@ -105,6 +123,19 @@ class PostController extends Controller
         });
 
         return view('layouts/index', ['result' => 'Пост обновлён!']);
+    }
+
+    public function publish($id){
+        $post = Post::find($id);
+        $result = 'Публикация опубликованна!';
+        if ($post->publiched){
+            $result = 'Публикация убрана!';
+        }
+        $post->update([
+            'publiched' => !$post->publiched
+        ]);
+
+        return view('layouts/result', ['result' => $result]);
     }
 
     public function delete($id){

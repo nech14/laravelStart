@@ -8,8 +8,8 @@
 
         <link rel="stylesheet" href="{{ asset('css/header.css') }}">
         <link rel="stylesheet" href="{{ asset('css/footer.css') }}">        
-        <link rel="stylesheet" href="{{ asset('css/main.css') }}">
-
+        <link rel="stylesheet" href="{{ asset('css/main.css') }}">      
+        <link rel="stylesheet" href="{{ asset('css/post_form.css') }}">
     </head>
     <body>
 
@@ -38,8 +38,8 @@
                 <div style="color: red; font-size: 14px">{{$message}}</div>
                 @enderror  
 
-                <label for="text">Содержание:</label>
-                <input type="comment" id="text" name="text" value="{{old('text')}}">
+                <label for="text">Содержание:</label>                
+                <textarea type="comment" id="text" name="text" value="{{old('text')}}"> </textarea>
                 @error('text')
                 <div style="color: red; font-size: 14px">{{$message}}</div>
                 @enderror

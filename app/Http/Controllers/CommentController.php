@@ -63,36 +63,6 @@ class CommentController extends Controller
 
         return view('layouts/index', ['result' => 'Публикация добавлена!']);
     }
-    
-
-    public function get_table($comments){
-        $table = '<table>';
-        $table .= '<tr>
-                        <th>id</th>
-                        <th>user_id</th>
-                        <th>Одобрен</th>
-                        <th>Commentable_type</th>
-                        <th>Commentable_id</th>
-                        <th>Оценкаг</th>
-                        <th>Комментарий</th>
-                    </tr>';
-
-        foreach ($comments as $comment) {
-            $table .= '<tr>';
-            $table .= '<td>' . '<a class="item_a" href="comment/'. $comment->id .'">' . $comment->id . '</a>' .'</td>';
-            $table .= '<td>' . '<a class="item_a" href="user/'. $comment->user_id .'">' . $comment->user_id . '</a>' . '</td>';
-            $b = $comment->approved == 0 ? "false" : "true";
-            $table .= '<td>' . $b . '</td>';
-            $table .= '<td>' . $comment->commentable_type . '</td>';
-            $table .= '<td>' . $comment->commentable_id . '</td>';
-            $table .= '<td>' . $comment->rating . '</td>';
-            $table .= '<td>' . $comment->comment . '</td>';
-            $table .= '</tr>';
-        }
-
-        $table .= '</table>';
-        return $table;
-    }
 
     public function index(){
         $comments = Comment::all();
@@ -157,6 +127,19 @@ class CommentController extends Controller
         });
 
         return view('layouts/index', ['result' => 'Комментарий обновлён!']);
+    }
+
+    public function approve($id){
+        $comment = Comment::find($id);
+        $result = 'Комментарий одобрен!';
+        if ($comment->approved){
+            $result = 'Одобрение снято с комментария!';
+        }
+        $comment->update([
+            'approved' => !$comment->approved
+        ]);
+
+        return view('layouts/result', ['result' => $result]);
     }
 
     public function delete($id){        

@@ -44,6 +44,11 @@ Route::get('/bd_menu', function(){
     return view('layouts/bd_menu');
 }) -> name('bd_menu');
 
+
+Route::get('blog', [PostController::class, 'show']) -> name('blog');
+
+Route::get('blog_post/{id}', [PostController::class, 'show_post']) -> name('blog_post');
+
 Route::get('/get_user_form', function(){
     return view('layouts/users/get_user_form');
 }) -> name('get_user_form');
@@ -112,6 +117,7 @@ Route::get('post/{id}', [PostController::class, 'get_post']) -> name('post.id');
 Route::post('post/get_post', [PostController::class, 'get_post_by_id'])->name('post.get');
 Route::get('post/{id}/edit', [PostController::class, 'edit']) -> name('post.edit');
 Route::post('post/{id}/update', [PostController::class, 'update']) -> name('post.update');
+Route::get('post/{id}/publish', [PostController::class, 'publish']) -> name('post.publish');
 Route::get('post/{id}/delete', [PostController::class, 'delete']) -> name('post.delete');
 
 
@@ -125,6 +131,7 @@ Route::post('comment/get_comment', [CommentController::class, 'get_comment_by_id
 Route::get('comment/{id}', [CommentController::class, 'get_comment']) -> name('comment.id');
 Route::get('comment/{id}/edit', [CommentController::class, 'edit']) -> name('comment.edit');
 Route::post('comment/{id}/update', [CommentController::class, 'update']) -> name('comment.update');
+Route::get('comment/{id}/approve', [CommentController::class, 'approve']) -> name('comment.approve');
 Route::get('comment/{id}/delete', [CommentController::class, 'delete']) -> name('comment.delete');
 
 

@@ -14,12 +14,13 @@ class Comment extends Model
     protected $fillable = [
 
         'commentable_id', 'commentable_type', 
-        'user_id', 'rating', 'comment'
+        'approved', 'user_id', 'rating', 'comment'
 
     ];
 
     protected $cast = [
 
+        'approved' => 'boolean',
         'user_id' => 'bigInteger',
         'rating' => 'float'
 
